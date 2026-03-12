@@ -345,10 +345,28 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Frap',
             norme: '14.3 Évaluation des constats',
             icon: <AlertTriangle className="w-4 h-4" />,
-            command: `[Command] = Frap
-[Processus] = 
-[Constat] = 
-[Recommandation] = `
+            modes: [
+              {
+                id: 'normal',
+                label: 'Normal',
+                command: `[Command] = /Frap
+[Processus] = Elaboration des rapprochement bancaires
+[Assertion] = validité, formalisation
+[Anomalie] = les rapprochements bancaire ne sont pas verifié par le DAF
+[Constat] = inexistence de rapprochement bancaires signés pour les mois de juin a decembre 2025`
+              },
+              {
+                id: 'avance',
+                label: 'Avancé',
+                command: `[Command] = /Frap
+[Processus] = Elaboration des rapprochement bancaires
+[Assertion] = validité, formalisation
+[Anomalie] = les rapprochements bancaire ne sont pas verifié par le DAF
+[Constat] = inexistence de rapprochement bancaires signés pour les mois de juin a decembre 2025
+[Variable 1] = Contenu de [Variable 1]
+[Variable 2] = Contenu de [Variable 2]`
+              }
+            ]
           },
           {
             id: 'synthese-frap',
@@ -2385,18 +2403,20 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = Frap
-[Processus] = 
-[Constat] = 
-[Recommandation] = `
+                command: `[Command] = /Frap
+[Processus] = Elaboration des rapprochement bancaires
+[Assertion] = validité, formalisation
+[Anomalie] = les rapprochements bancaire ne sont pas verifié par le DAF
+[Constat] = inexistence de rapprochement bancaires signés pour les mois de juin a decembre 2025`
               },
               {
                 id: 'avance',
                 label: 'Avancé',
-                command: `[Command] = Frap
-[Processus] = 
-[Constat] = 
-[Recommandation] = 
+                command: `[Command] = /Frap
+[Processus] = Elaboration des rapprochement bancaires
+[Assertion] = validité, formalisation
+[Anomalie] = les rapprochements bancaire ne sont pas verifié par le DAF
+[Constat] = inexistence de rapprochement bancaires signés pour les mois de juin a decembre 2025
 [Variable 1] = Contenu de [Variable 1]
 [Variable 2] = Contenu de [Variable 2]`
               }
