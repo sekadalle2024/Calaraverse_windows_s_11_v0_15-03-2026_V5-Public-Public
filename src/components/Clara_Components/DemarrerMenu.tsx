@@ -373,24 +373,48 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Synthèse des Frap',
             norme: '14.2 Analyses et constats potentiels de la mission',
             icon: <FileSearch className="w-4 h-4" />,
-            command: `[Command] = /Table synthese
+            modes: [
+              {
+                id: 'normal',
+                label: 'Normal',
+                command: `[Command] = Table_Template
+[Node] = Frap`
+              },
+              {
+                id: 'avance',
+                label: 'Avancé',
+                command: `[Command] = /Table synthese
 [Command Manuel] = Étape mission
 [Étape précédente] = Frap
 [Étape mission] = Synthèse des Frap
 [Modèle] = 
 [Pièces jointes] = Frap de la mission`
+              }
+            ]
           },
           {
             id: 'rapport-provisoire',
             label: 'Rapport provisoire',
             norme: '14.5 Conclusions de la mission',
             icon: <FileText className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_provisoire
+            modes: [
+              {
+                id: 'normal',
+                label: 'Normal',
+                command: `[Command] = Table_Template
+[Node] = Synthèse`
+              },
+              {
+                id: 'avance',
+                label: 'Avancé',
+                command: `[Command] = /Table rapport_provisoire
 [Command Manuel] = Étape mission
 [Étape précédente] = Synthèse des Frap
 [Étape mission] = Rapport provisoire
 [Modèle] = 
 [Pièces jointes] = Synthèse des Frap`
+              }
+            ]
           },
           {
             id: 'reunion-cloture',
@@ -406,24 +430,48 @@ const MENU_DATA: LogicielItem[] = [
             label: 'Rapport final',
             norme: '15.1 Communication des résultats définitifs de la mission',
             icon: <FileCheck className="w-4 h-4" />,
-            command: `[Command] = /Table rapport_final
+            modes: [
+              {
+                id: 'normal',
+                label: 'Normal',
+                command: `[Command] = Table_Template
+[Node] = Rapport provisoire`
+              },
+              {
+                id: 'avance',
+                label: 'Avancé',
+                command: `[Command] = /Table rapport_final
 [Command Manuel] = Étape mission
 [Étape précédente] = Rapport provisoire
 [Étape mission] = Rapport final
 [Modèle] = 
 [Pièces jointes] = Rapport provisoire`
+              }
+            ]
           },
           {
             id: 'suivi-recos',
             label: 'Suivi des recos',
             norme: '15.2 Suivi des recommandations',
             icon: <CheckSquare className="w-4 h-4" />,
-            command: `[Command] = /Table suivi_recos
+            modes: [
+              {
+                id: 'normal',
+                label: 'Normal',
+                command: `[Command] = Table_Template
+[Node] = Rapport final`
+              },
+              {
+                id: 'avance',
+                label: 'Avancé',
+                command: `[Command] = /Table suivi_recos
 [Command Manuel] = Étape mission
 [Étape précédente] = Rapport final
 [Étape mission] = Suivi des recos
 [Modèle] = 
 [Pièces jointes] = Rapport final`
+              }
+            ]
           }
         ]
       }
@@ -1982,12 +2030,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table synthese
-[Command Manuel] = Étape mission
-[Étape précédente] = Frap
-[Étape mission] = Synthèse des Frap
-[Modèle] = 
-[Pièces jointes] = Frap de la mission`
+                command: `[Command] = Table_Template
+[Node] = Frap`
               },
               {
                 id: 'avance',
@@ -2011,12 +2055,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table rapport_provisoire
-[Command Manuel] = Étape mission
-[Étape précédente] = Synthèse des Frap
-[Étape mission] = Rapport provisoire
-[Modèle] = 
-[Pièces jointes] = Synthèse des Frap`
+                command: `[Command] = Table_Template
+[Node] = Synthèse`
               },
               {
                 id: 'avance',
@@ -2040,12 +2080,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table rapport_final
-[Command Manuel] = Étape mission
-[Étape précédente] = Rapport provisoire
-[Étape mission] = Rapport final
-[Modèle] = 
-[Pièces jointes] = Rapport provisoire`
+                command: `[Command] = Table_Template
+[Node] = Rapport provisoire`
               },
               {
                 id: 'avance',
@@ -2069,12 +2105,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table suivi_recos
-[Command Manuel] = Étape mission
-[Étape précédente] = Rapport final
-[Étape mission] = Suivi des recos
-[Modèle] = 
-[Pièces jointes] = Rapport final`
+                command: `[Command] = Table_Template
+[Node] = Rapport final`
               },
               {
                 id: 'avance',
@@ -2431,12 +2463,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table synthese
-[Command Manuel] = Étape mission
-[Étape précédente] = Frap
-[Étape mission] = Synthèse des Frap
-[Modèle] = 
-[Pièces jointes] = Frap de la mission`
+                command: `[Command] = Table_Template
+[Node] = Frap`
               },
               {
                 id: 'avance',
@@ -2461,12 +2489,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table rapport_provisoire
-[Command Manuel] = Étape mission
-[Étape précédente] = Synthèse des Frap
-[Étape mission] = Rapport provisoire
-[Modèle] = 
-[Pièces jointes] = Synthèse des Frap`
+                command: `[Command] = Table_Template
+[Node] = Synthèse`
               },
               {
                 id: 'avance',
@@ -2515,12 +2539,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table rapport_final
-[Command Manuel] = Étape mission
-[Étape précédente] = Rapport provisoire
-[Étape mission] = Rapport final
-[Modèle] = 
-[Pièces jointes] = Rapport provisoire`
+                command: `[Command] = Table_Template
+[Node] = Rapport provisoire`
               },
               {
                 id: 'avance',
@@ -2545,12 +2565,8 @@ Contenu de [Contexte de base]
               {
                 id: 'normal',
                 label: 'Normal',
-                command: `[Command] = /Table suivi_recos
-[Command Manuel] = Étape mission
-[Étape précédente] = Rapport final
-[Étape mission] = Suivi des recos
-[Modèle] = 
-[Pièces jointes] = Rapport final`
+                command: `[Command] = Table_Template
+[Node] = Rapport final`
               },
               {
                 id: 'avance',
@@ -3383,7 +3399,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node) &&
-          buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
+        buttonRef.current && !buttonRef.current.contains(event.target as Node)) {
         const target = event.target as HTMLElement;
         if (!target.closest('[data-submenu-portal]')) {
           closeMenu();
@@ -3451,7 +3467,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
   const formatCommandWithBullets = (command: string): string => {
     // Diviser la commande en lignes
     const lines = command.split('\n');
-    
+
     // Ajouter un tiret devant chaque ligne non vide qui commence par '['
     const formattedLines = lines.map(line => {
       const trimmedLine = line.trim();
@@ -3466,7 +3482,7 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
       // Pour les autres lignes (comme les objets JSON), les garder telles quelles
       return line;
     });
-    
+
     return formattedLines.join('\n');
   };
 
@@ -3474,16 +3490,16 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
     if (activeEtape) {
       // Si le mode a sa propre commande, l'utiliser, sinon utiliser l'ancienne logique
       const rawCommand = mode.command || (mode.prefix && activeEtape.command ? mode.prefix + activeEtape.command : activeEtape.command || '');
-      
+
       // Formater la commande avec des listes à puces
       const finalCommand = formatCommandWithBullets(rawCommand);
-      
+
       try {
         onInsertCommand(finalCommand);
       } catch (error) {
         console.error('[DemarrerMenu] Error calling onInsertCommand:', error);
       }
-      
+
       setTimeout(() => {
         closeMenu();
       }, 100);
@@ -3524,8 +3540,8 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
         onClick={toggleMenu}
         disabled={disabled}
         className={`flex items-center gap-2 px-3 py-2 rounded-full text-sm font-medium transition-all
-          ${isOpen 
-            ? 'bg-[#6b1102] text-white shadow-lg shadow-[#6b1102]/30' 
+          ${isOpen
+            ? 'bg-[#6b1102] text-white shadow-lg shadow-[#6b1102]/30'
             : 'bg-gray-100/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-[#6b1102]/10 dark:hover:bg-[#6b1102]/20 hover:text-[#6b1102] dark:hover:text-[#ff6b5b]'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -3560,8 +3576,8 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
               <div key={logiciel.id}>
                 <button
                   className={`w-full flex items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-colors border-b border-gray-100 dark:border-gray-700/50
-                    ${activeLogiciel === logiciel.id 
-                      ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                    ${activeLogiciel === logiciel.id
+                      ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]'
                       : 'text-gray-800 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                     }`}
                   onClick={() => {
@@ -3586,13 +3602,13 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                         <div className="px-4 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider bg-gray-100 dark:bg-gray-800/50">
                           {phase.label}
                         </div>
-                        
+
                         {phase.etapes && phase.etapes.map(etape => (
                           <button
                             key={etape.id}
                             className={`w-full flex items-center gap-3 px-4 py-2.5 pl-6 text-left text-sm transition-colors
-                              ${activeEtape?.id === etape.id 
-                                ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                              ${activeEtape?.id === etape.id
+                                ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]'
                                 : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
                               }`}
                             onClick={(e) => handleEtapeClick(etape, e)}
@@ -3608,8 +3624,8 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                           <div key={cycle.id}>
                             <button
                               className={`w-full flex items-center gap-3 px-4 py-2.5 pl-6 text-left text-sm transition-colors
-                                ${activeCycle?.id === cycle.id 
-                                  ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                                ${activeCycle?.id === cycle.id
+                                  ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]'
                                   : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
                                 }`}
                               onClick={() => handleCycleClick(cycle)}
@@ -3620,15 +3636,15 @@ const DemarrerMenu: React.FC<DemarrerMenuProps> = ({ onInsertCommand, disabled =
                               <span className="flex-1">{cycle.label}</span>
                               <ChevronRight className={`w-4 h-4 flex-shrink-0 transition-transform duration-200 ${activeCycle?.id === cycle.id ? 'rotate-90 text-[#6b1102] dark:text-[#ff6b5b]' : 'text-gray-400'}`} />
                             </button>
-                            
+
                             {activeCycle?.id === cycle.id && (
                               <div className="bg-gray-100 dark:bg-gray-800/30">
                                 {cycle.tests.map(test => (
                                   <button
                                     key={test.id}
                                     className={`w-full flex items-center gap-3 px-4 py-2 pl-12 text-left text-sm transition-colors
-                                      ${activeTest?.id === test.id 
-                                        ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]' 
+                                      ${activeTest?.id === test.id
+                                        ? 'bg-[#6b1102]/10 dark:bg-[#6b1102]/20 text-[#6b1102] dark:text-[#ff6b5b]'
                                         : 'text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
                                       }`}
                                     onClick={(e) => handleTestClick(test, e)}
