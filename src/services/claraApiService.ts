@@ -34,14 +34,14 @@ export class ClaraApiService {
   // n8n endpoint URL
   //private n8nEndpoint = "http://localhost:5678/webhook/template";
   //private n8nEndpoint = "https://barow52161.app.n8n.cloud/webhook/integration";
-    private n8nEndpoint = "https://j17rkv4c.rpcld.cc/webhook/template";
-    //private n8nEndpoint = "http://localhost:5678/webhook/template";
-    //private n8nEndpoint = http://localhost:5678/webhook/htlm_processor"";
+  private n8nEndpoint = "https://j17rkv4c.rpcld.cc/webhook/template";
+  //private n8nEndpoint = "http://localhost:5678/webhook/template";
+  //private n8nEndpoint = http://localhost:5678/webhook/htlm_processor"";
   //  private n8nEndpoint = "http://localhost:5678/webhook/table";
-   //private n8nEndpoint = "http://localhost:5678/webhook/json";
- //private n8nEndpoint = "http://localhost:5678/webhook/cia";
- 
-   //private n8nEndpoint = "http://localhost:5678/webhook/htlm_processor";
+  //private n8nEndpoint = "http://localhost:5678/webhook/json";
+  //private n8nEndpoint = "http://localhost:5678/webhook/cia";
+
+  //private n8nEndpoint = "http://localhost:5678/webhook/htlm_processor";
 
 
 
@@ -636,7 +636,7 @@ export class ClaraApiService {
 
       // Build structured payload for n8n
       let requestBody: any;
-      
+
       if (attachments && attachments.length > 0) {
         // Use the new structured format when attachments are present
         const structuredData = claraAttachmentService.formatDataForN8nStructured(message, attachments);

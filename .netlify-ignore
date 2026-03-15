@@ -21,6 +21,7 @@ docker/
 .dockerignore
 
 # Documentation volumineuse
+Doc_AIONUI/
 Claraverse windows 11/
 Claraverse_windows_11_26_02_26/
 ClaraVerse-v-firebase-V2-24.11.25/

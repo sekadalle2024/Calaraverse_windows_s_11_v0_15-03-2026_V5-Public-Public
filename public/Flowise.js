@@ -1,7 +1,9 @@
 /**
- * Script dynamique pour les tables de critères dans Claraverse - V17.1 (Fix réponse n8n)
- * @version 17.1.0
+ * Script dynamique pour les tables de critères dans Claraverse - V17.2 (Fix lignes vides rapport)
+ * @version 17.2.0
  * @description
+ * - FIX V17.2: Suppression des lignes vides dans les tables de réponse n8n pour les rapports
+ *   (Rapport final, Rapport provisoire, Synthèse) détectés dans la colonne Description
  * - FIX V17.1: Gestion correcte de tous les formats de réponse n8n (Array, Object, data, output, tables)
  * - Détecte dynamiquement le mot-clé depuis la table "Flowise" elle-même
  * - Plus besoin de SEARCH_KEYWORDS statiques - le mot-clé est extrait de la première ligne de la colonne "Flowise"
@@ -17,7 +19,7 @@
   "use strict";
 
   console.log(
-    "🚀 Initialisation du script dynamique de tables V17.1 (Fix réponse n8n)"
+    "🚀 Initialisation du script dynamique de tables V17.2 (Fix lignes vides rapport)"
   );
 
   //http://localhost:5678/webhook/htlm_processor
@@ -916,6 +918,42 @@ ${displayHTML}
     }
   }
 
+  /**
+   * FIX V17.2 ROBUST - Détecte si la réponse n8n correspond à un rapport
+   * en scannant TOUTES les cellules (td ET th) de TOUTES les tables de la réponse.
+   * @param {Array<HTMLElement>} tables - Les tables extraites de la réponse
+   * @returns {boolean} true si un mot-clé de rapport est détecté
+   */
+  function detectReportKeywordInFirstTable(tables) {
+    const REPORT_KEYWORDS = [
+      /rapport\s+final/i,
+      /rapport\s+provisoire/i,
+      /synth[eè]se/i
+    ];
+
+    if (!tables || tables.length === 0) return false;
+
+    console.log(`🔍 [V17.2] Scan de ${tables.length} table(s) pour détecter un mot-clé rapport...`);
+
+    // Scanner TOUTES les tables (pas seulement la 1ère) et TOUTES les cellules (td + th)
+    for (let t = 0; t < tables.length; t++) {
+      const allCells = tables[t].querySelectorAll('td, th');
+      for (const cell of allCells) {
+        const text = cell.textContent.trim();
+        if (!text) continue;
+        for (const pattern of REPORT_KEYWORDS) {
+          if (pattern.test(text)) {
+            console.log(`✅ [V17.2] Mot-clé rapport détecté dans table[${t}], cellule: "${text.substring(0, 80)}" → Nettoyage activé`);
+            return true;
+          }
+        }
+      }
+    }
+
+    console.log('ℹ️ [V17.2] Aucun mot-clé rapport détecté dans la réponse n8n');
+    return false;
+  }
+
   function extractTablesFromResponse(responseText) {
     const tables = [];
     console.log("🔍 Analyse de la réponse n8n:");
@@ -933,6 +971,10 @@ ${displayHTML}
         enhanceTableUrls(table);
         tables.push(table.cloneNode(true));
       });
+
+      // ⭐ FIX V17.2: Nettoyage des lignes vides pour les rapports (à partir de la 2ème table)
+      applyReportEmptyRowsCleanup(tables);
+
       return tables;
     }
 
@@ -970,9 +1012,87 @@ ${displayHTML}
       console.log("📄 Contenu analysé:", responseText.substring(0, 500));
     } else {
       console.log(`✅ ${tables.length} table(s) extraite(s) du markdown`);
+      // ⭐ FIX V17.2: Nettoyage des lignes vides pour les rapports (à partir de la 2ème table)
+      applyReportEmptyRowsCleanup(tables);
     }
 
     return tables;
+  }
+
+  /**
+   * FIX V17.2 - Applique le nettoyage des lignes vides sur les tables à partir de la 2ème
+   * uniquement si la première table contient un mot-clé de rapport dans la colonne Description
+   * @param {Array<HTMLElement>} tables - Les tables à analyser et nettoyer
+   */
+  function applyReportEmptyRowsCleanup(tables) {
+    if (!tables || tables.length < 2) {
+      console.log('ℹ️ [V17.2] Moins de 2 tables → pas de nettoyage conditionnel nécessaire');
+      return;
+    }
+
+    const isReport = detectReportKeywordInFirstTable(tables);
+
+    if (!isReport) {
+      console.log('ℹ️ [V17.2] Pas de rapport détecté → pas de nettoyage supplémentaire');
+      return;
+    }
+
+    console.log(`🧹 [V17.2] Nettoyage des lignes vides (mode rapport) sur ${tables.length - 1} table(s) (index 1 à ${tables.length - 1})`);
+
+    for (let i = 1; i < tables.length; i++) {
+      const rowsBefore = tables[i].querySelectorAll('tbody tr').length;
+      cleanEmptyRowsForReport(tables[i]);
+      const rowsAfter = tables[i].querySelectorAll('tbody tr').length;
+      const removed = rowsBefore - rowsAfter;
+      if (removed > 0) {
+        console.log(`✅ [V17.2] Table ${i + 1}: ${removed} ligne(s) vide(s) supprimée(s) (${rowsBefore} → ${rowsAfter})`);
+      } else {
+        console.log(`ℹ️ [V17.2] Table ${i + 1}: Aucune ligne vide à supprimer`);
+      }
+    }
+  }
+
+  /**
+   * FIX V17.2 - Nettoyage étendu des lignes vides pour les tables de rapport.
+   * Supprime une ligne si :
+   *   (a) Toutes les cellules sont vides ou '---' (comportement existant)
+   *   (b) Seule la 1ère cellule contient un numéro (ex: "2", "6") et toutes
+   *       les autres cellules sont vides — cas typique des lignes "fantômes" de n8n
+   * @param {HTMLElement} table - La table à nettoyer
+   */
+  function cleanEmptyRowsForReport(table) {
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+      const cells = Array.from(row.querySelectorAll('td'));
+      if (cells.length === 0) return;
+
+      // Cas (a) : toutes les cellules sont vides ou '---'
+      const allEmpty = cells.every(cell => {
+        const text = cell.textContent.trim();
+        return text === '' || text === '---';
+      });
+
+      if (allEmpty) {
+        console.log(`🗑️ [V17.2] Ligne supprimée (toutes cellules vides): "${row.textContent.trim().substring(0, 60)}"`);
+        row.remove();
+        return;
+      }
+
+      // Cas (b) : seule la 1ère cellule a du contenu (un numéro)
+      // et soit c'est la SEULE cellule, soit toutes les autres sont vides
+      const firstCellText = cells[0].textContent.trim();
+      const isFirstCellNumeric = /^\d+$/.test(firstCellText);
+      
+      const isRestEmptyOrMissing = cells.length === 1 || cells.slice(1).every(cell => {
+        const text = cell.textContent.trim();
+        return text === '' || text === '---';
+      });
+
+      if (isFirstCellNumeric && isRestEmptyOrMissing) {
+        console.log(`🗑️ [V17.2] Ligne supprimée (numéro "${firstCellText}" seul)`);
+        row.remove();
+      }
+    });
   }
 
   function createTableFromMarkdown(headerRow, dataRows) {
@@ -1399,10 +1519,10 @@ ${displayHTML}
         return { success: false, error: error.message };
       }
     },
-    version: "17.1.0 - Fix réponse n8n (Array/Object/data/output/tables)",
+    version: "17.2.0 - Fix lignes vides rapport (Rapport final/provisoire/Synthèse)",
   };
 
-  console.log("🎉 Flowise.js V17.1 chargé avec succès!");
+  console.log("🎉 Flowise.js V17.2 chargé avec succès!");
   console.log("💡 Commandes disponibles:");
   console.log("   - window.ClaraverseN8nV17.testN8nConnection()");
   console.log("   - window.ClaraverseN8nV17.getCacheInfo()");
